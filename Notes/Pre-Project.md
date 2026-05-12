@@ -6,7 +6,13 @@
 
 - It took me to an official “like” google doc and then a fake login page with “human verification”.
  - Which was what also made me realize this was most likely a phishing attempt
+  
+<img width="2048" height="1285" alt="Fiverr_img1" src="https://github.com/user-attachments/assets/bc1f59b3-81f4-4016-aed9-67d6a204fa83" />
+
+<img width="2048" height="1285" alt="Fiverr_img2" src="https://github.com/user-attachments/assets/58a940f3-e742-4e5b-bb4c-81abbb3c4d0c" />
 
  - At first out of excitement for a first sale, I would type in my real username and be taken to a personalized page that had my profile picture and gig title: 
+
+<img width="2048" height="1285" alt="Fiverr_img3" src="https://github.com/user-attachments/assets/c8bea193-5701-4802-94eb-4aec00c5d5a7" />
 
 - However, as I tried to select the paypal option it wouldn't let me and I didn't want to use my card, having my suspicion of the site. I wanted to use paypal, so I went to the official site and selected paypal as my preferred method of payment, and went back to the page and it still wouldn't let me select it, so I started my investigation.
