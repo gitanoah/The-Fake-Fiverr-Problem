@@ -25,7 +25,7 @@ First I wanted to start off with a basic functionality-like investigation, and I
     - Whenever you click the top right account bubble or any other links on the fake site (on the general and personalized site )it takes the user to the corresponding official Fiverr page on Fiverr.com
    
 ## Assumptions
-  **Phishing Sites:**
+  **Fiverr Phishing Site:**
   - If you type in your actual username the phishing site extracts the data from your gig to display on the screen.
   - The phishing site sends the user card input to an external user/server and the user can never actually be verified
   - All links on the phishing site redirect the user to the real Fiverr site
