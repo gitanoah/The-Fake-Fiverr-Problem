@@ -13,7 +13,7 @@
 ![[Screenshot 2026-05-14 at 5.08.13 PM.png]]
 - This confirms the assumption that the phishing site extracts the users data from their publicly displayed gig, things such as their gig price, photo, and their profile photo on the top right.
 - Additionally when I inspected the site I saw the fetch() command being used, which is also evidence of the site gathering data from another site, which in this case is the img from the Fiverr URL of the seller ![[Screenshot 2026-05-14 at 5.19.29 PM.png]]
-## ## Assumption 2:
+## Assumption 2:
 - For the second assumption "  All links on the phishing site redirect the user to the real Fiverr site" I just inspected the page and saw that the header and footer contained links to corresponding the Fiverr.com site![[Screenshot 2026-05-14 at 5.19.34 PM.png|674]]
 - This assumption was also correct, because the corresponding official Fiverr use more of a relative path approach to their header and footer links which dont include `www.Fiverr/`...
 ![[Screenshot 2026-05-18 at 3.55.27 PM.png]]
