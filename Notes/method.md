@@ -1,5 +1,5 @@
 
-**First I want to test some assumptions that aren't confirmed:**
+**(First I want to test some of my assumptions: )**
 
 **Phishing Site:**
 ## Assumption 1:
@@ -26,7 +26,7 @@
 - So I then searched for "`POST`" while inspecting the page again, since I learned from my previous project that `POST=` is an HTTP method that uses a URL to decide where data is sent however I could not find anything suspicious besides the already altered website URL (`https://first-gig.top/f...`) 
 - I tried to open DevTools specifically the `Network` tab and see if I could find any alerting 
 ## More
-- Then I decided it may be of use to use **Burpsuite** instead of looking through the overwhelming amount of traffic traffic by becoming the middle man between my browser and the server the information may be being sent to. I researched the tool for a couple of days and came to the conclusion it would fit me more to just rely on the dev tools through the browser for the sake easier use and safety.
+- I decided it may be of use to use **Burpsuite** instead of looking through the overwhelming amount of traffic traffic by becoming the middle man between my browser and the server the information may be being sent to. (I researched the tool for a couple of days and came to the conclusion it would fit me more to just rely on the dev tools through the browser for the sake easier use and safety.)
 - ![[IMG_8241.png]]
 - ![[IMG_8242.png]]
 - A final note is during my BurpSuite inspection I encountered an error when trying to connect via BurpSuite and I tested the connection to the web server using `curl -vk` (normal and with proxy) and `openssl s_client`.
