@@ -36,10 +36,13 @@
 - I tried to open DevTools specifically the `Network` tab and see if I could find any alerting 
 ## More
 - I decided it may be of use to use **Burpsuite** instead of looking through the overwhelming amount of traffic traffic by becoming the middle man between my browser and the server the information may be being sent to. (I researched the tool for a couple of days and came to the conclusion it would fit me more to just rely on the dev tools through the browser for the sake easier use and safety.)
-- ![[IMG_8241.png]]
-- ![[IMG_8242.png]]
+<img width="5712" height="4284" alt="IMG_8241" src="https://github.com/user-attachments/assets/56fda623-49db-40e8-9afd-832fe433ecdc" />
+
+<img width="5712" height="4284" alt="IMG_8242" src="https://github.com/user-attachments/assets/4804424c-24d4-4889-b52c-26b644606a3c" />
+
 - A final note is during my BurpSuite inspection I encountered an error when trying to connect via BurpSuite and I tested the connection to the web server using `curl -vk` (normal and with proxy) and `openssl s_client`.
-- <img width="3024" height="4032" alt="IMG_8243" src="https://github.com/user-attachments/assets/20304409-f3a5-4d6d-bb68-46b179cee82b" />
+
+<img width="3024" height="4032" alt="IMG_8243" src="https://github.com/user-attachments/assets/20304409-f3a5-4d6d-bb68-46b179cee82b" />
 
 <img width="4032" height="3024" alt="IMG_8240" src="https://github.com/user-attachments/assets/5954763c-98a8-4fe4-82f0-264a1f951836" />
 
