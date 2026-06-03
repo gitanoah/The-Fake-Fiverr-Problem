@@ -7,10 +7,6 @@ const pageText = document.body.innerText.toLowerCase();
 
 // find way to check for capitalization incase phishing site uses mixed caps to mask domain name (e.g. fIvErR.com)
 
-for(const brand in brands){
-    console.log(brand);
-}
-
 const maliciousDomains = [
     ".top", ".xyz", ".xin", 
     ".shop", ".cfd", ".lol", ".cf", ".ml", 
@@ -28,6 +24,17 @@ function main() {
 }
 
 function calculateRiskScore(){
+    //example
+    for(const brand in brands){
+        if(pageText.includes(brandName) && !hostname.includes(brands[brandName].domain))
+        {
+            riskScore += 0;
+            console.log("+40 to risk score", brandName);
+        }
+    }
+//TODO
+
+//Previous stuff
     if (!hostname.endsWith(".com")) {
         riskScore += 15;
     }
