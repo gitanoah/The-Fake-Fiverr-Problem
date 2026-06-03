@@ -36,6 +36,7 @@
 - I tried to open DevTools specifically the `Network` tab and see if I could find any alerting 
 ## More
 - I decided it may be of use to use **Burpsuite** instead of looking through the overwhelming amount of traffic traffic by becoming the middle man between my browser and the server the information may be being sent to. (I researched the tool for a couple of days and came to the conclusion it would fit me more to just rely on the dev tools through the browser for the sake easier use and safety.)
+
 <img width="5712" height="4284" alt="IMG_8241" src="https://github.com/user-attachments/assets/56fda623-49db-40e8-9afd-832fe433ecdc" />
 
 <img width="5712" height="4284" alt="IMG_8242" src="https://github.com/user-attachments/assets/4804424c-24d4-4889-b52c-26b644606a3c" />
@@ -53,6 +54,5 @@
 - Back to the Dev Tools when I submitted fake data in the site I saw a `submitCardCurrency` file trigger along with event listeners that run this process, (I also saw the server was Cloudflare which confirmed the IP findings earlier) this gives me enough evidence to assume that the card data is being collected from the phishing site and being sent somewhere else hidden by the anti-proxy part of Cloudflare.
 <img width="5712" height="4284" alt="IMG_8245" src="https://github.com/user-attachments/assets/670e50ff-dc3e-4f01-97a4-cb68922af41f" />
 
-## Solution
-- In order to account for all of the different factors that can identify a phishing site I wanted to follow the practices of "defense in depth" and developed the idea from my friend of using a "risk score"
-- When a user is redirected from the home page of a site or is prompted to input card data the risk score will be displayed if it is over 55 percent or if the user wants to check it through the extension.
+## Next Steps
+- I need to open other online marketplaces and use commands in the console use javascript commands in the console then create a chrome extension that can automate that investigation I do in DevTools.
