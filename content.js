@@ -24,7 +24,7 @@ function main() {
 }
 
 function calculateRiskScore(){
-    //example
+    //example from chat
     for(const brand in brands){
         if(pageText.includes(brandName) && !hostname.includes(brands[brandName].domain))
         {
