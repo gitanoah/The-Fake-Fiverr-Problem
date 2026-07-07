@@ -1,13 +1,12 @@
 let riskScore = 0;
 let findings = [];
 
-const hostname = window.location.hostname.toLowerCase;
+const hostname = window.location.hostname.toLowerCase();
 
 const pageText = document.body.innerText.toLowerCase();
-
 // find way to check for capitalization incase phishing site uses mixed caps to mask domain name (e.g. fIvErR.com)
 
-const maliciousDomains = [
+const suspiciousDomains = [
     ".top", ".xyz", ".xin", 
     ".shop", ".cfd", ".lol", ".cf", ".ml", 
     ".ga", ".work", ".gq", ".fit", ".tk"
@@ -17,15 +16,46 @@ const trustedDomains = [
     ".edu", ".gov", ".mil"
 ];
 
-function main() {
-    calculateRiskScore();
-    displayRiskScore(riskScore);
-    warningBannerPopup(riskScore);
+const maliciousPhrases = [
+    "human verification",
+    "verify your identity",
+    "verify account",
+    "verify your account",
+    "confirm your identity",
+    "confirm identity",
+    "identity confirmation",
+    "account suspended",
+    "unusual activity",
+    "unusual account activity",
+    "collect your payment",
+    "collect your funds",
+    "claim your funds",
+    "collect your payment",
+    "act now",
+    "action required",
+    "urgent action required",
+    "urgent action needed"
+];
+
+
+function addFinding(points, message){
+    riskScore += points;
+    findings.push({points, message});
 }
+
+//New
+function isOnDomain(hostname, domain){
+    return host === domain || host.endsWith("." + domain);
+}
+
+function pageWantsSensitiveData(){
+    
+}
+//
 
 function calculateRiskScore(){
     //example from chat
-    for(const brand in brands){
+    for(const brandName in brands){
         if(pageText.includes(brandName) && !hostname.includes(brands[brandName].domain))
         {
             riskScore += 0;
@@ -36,13 +66,16 @@ function calculateRiskScore(){
 
 //Previous stuff
     if (!hostname.endsWith(".com")) {
-        riskScore += 15;
+         addFinding(15, "Common Domain Name Ending");
+    }
+    if (!hostname.endsWith(".com")) {
+         addFinding(35, "Common Malicious Domain Name Ending");
     }
     if (pageText.includes("verify account")) {
-        riskScore += 25;
+        addFinding(25, "Unwarranted Verification");
     }
     if (pageText.includes("credit card")) {
-        riskScore += 10;
+        addFinding(15, "Card Informaiton Request");
     }
 
 }
@@ -61,6 +94,12 @@ function warningBannerPopup(rscore){
     else{
         return;
     }
+}
+
+function main() {
+    calculateRiskScore();
+    displayRiskScore(riskScore);
+    warningBannerPopup(riskScore);
 }
 
 main();
