@@ -2,13 +2,20 @@
     "manifest_version": 3,
     "name": "Ecommerce Risk Score - Gitanoa",
     "version": "0.1.0",
-    "description": "Calculating risk score for websites to help avoid phishing and data leaks",
-    "host_permissions": ["activeTab"],
+    "description": "Calculates a phishing risk score for websites to help avoid scams and data leaks",
+
+    "permissions": ["activeTab"],
+
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Check this site's risk score"
+    },
 
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["brands.js", "content.js"]
+            "js": ["brands.js", "content.js"],
+            "run_at": "document_idle"
         }
     ]
 }
