@@ -44,62 +44,174 @@ function addFinding(points, message){
 }
 
 //New
+
+//CHECKS
 function isOnDomain(hostname, domain){
     return host === domain || host.endsWith("." + domain);
 }
 
 function pageWantsSensitiveData(){
-    
+    const cardInputs = document.querySelectorAll(
+        'input[autocomplete^="cc-"], input[name*="card"], input[id*="card"], ' +
+        'input[name*="cvv"], input[id*="cvv"], input[name*="cvc"]'
+    );
+    const passwordInputs = document.querySelectorAll('input[type="password"]');
+    return {
+        card: cardInputs.length > 0,
+        password: passwordInputs.length > 0
+    };
 }
-//
 
-function calculateRiskScore(){
-    //example from chat
-    for(const brandName in brands){
-        if(pageText.includes(brandName) && !hostname.includes(brands[brandName].domain))
-        {
-            riskScore += 0;
-            console.log("+40 to risk score", brandName);
+//Layers
+// 1. Brand Impersonation
+function checkBrandImpersonation(inputs) {
+    for (const brandName in brands) {
+        const brand = brands[brandName];
+        const onRealDomain = isOnDomain(hostname, brand.domain);
+        if (onRealDomain) continue; 
+
+        
+        if (hostname.includes(brandName.replace(" ", ""))) {
+            addFinding(brand.riskWeight + 10,
+                `Hostname contains "${brandName}" but is not ${brand.domain}`);
+            continue; 
+        }
+
+        const mentioned = pageTitle.includes(brandName) || pageText.includes(brandName);
+        if (mentioned && (inputs.card || inputs.password)) {
+            addFinding(brand.riskWeight,
+                `Page imitates "${brandName}" (asks for credentials/card) but host is ${hostname}, not ${brand.domain}`);
         }
     }
-//TODO
+}
+//2. Domain
 
-//Previous stuff
-    if (!hostname.endsWith(".com")) {
-         addFinding(15, "Common Domain Name Ending");
+function checkTld() {
+    for (const tld of suspiciousDomains) {
+        if (hostname.endsWith(tld)) {
+            addFinding(35, `Domain uses high-abuse extension "${tld}"`);
+            return;
+        }
     }
-    if (!hostname.endsWith(".com")) {
-         addFinding(35, "Common Malicious Domain Name Ending");
+    for (const tld of trustedDomains) {
+        if (hostname.endsWith(tld)) {
+            addFinding(-15, `Domain uses restricted extension "${tld}"`);
+            return;
+        }
     }
-    if (pageText.includes("verify account")) {
-        addFinding(25, "Unwarranted Verification");
-    }
-    if (pageText.includes("credit card")) {
-        addFinding(15, "Card Informaiton Request");
+}
+//3. URL Shape
+
+function checkUrlShape() {
+    
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) {
+        addFinding(30, "Site is served from a raw IP address, not a domain name");
     }
 
+    if (hostname.split(".").some(part => part.startsWith("xn--"))) {
+        addFinding(25, "Domain uses punycode (possible look-alike characters)");
+    }
+
+    if (hostname.split(".").length >= 5) {
+        addFinding(15, "Unusually deep subdomain chain");
+    }
+    if ((hostname.match(/-/g) || []).length >= 3) {
+        addFinding(10, "Hostname contains many hyphens");
+    }
+}
+//4. Sensitive Input
+
+function checkSensitiveInputs(inputs) {
+    
+    if (inputs.card) {
+        addFinding(10, "Page requests card details");
+    }
+    
+    if ((inputs.card || inputs.password) && window.location.protocol === "http:") {
+        addFinding(30, "Credentials/card requested over insecure HTTP");
+    }
+
+    for (const form of document.querySelectorAll("form[action]")) {
+        try {
+            const actionHost = new URL(form.action, window.location.href).hostname.toLowerCase();
+            if (actionHost && actionHost !== hostname && !isOnDomain(actionHost, hostname)) {
+                addFinding(25, `A form submits data to a different domain (${actionHost})`);
+                break; // one finding is enough
+            }
+        } catch (exception) { /* malformed action attribute, ignore */ }
+    }
 }
 
-function displayRiskScore(rscore){
-    console.log("Risk Score = ", rscore)
-    //TODO
+//5. Pressure/verification language
+
+function checkPhrases() {
+    let hits = 0;
+    for (const phrase of suspiciousPhrases) {
+        if (pageText.includes(phrase)) {
+            hits++;
+            if (hits <= 2) { // cap so a long page can't rack up 12 findings
+                addFinding(15, `Suspicious language: "${phrase}"`);
+            }
+        }
+    }
+}
+//END OF CHECKS
+
+//OUTPUT
+
+function clampScore() {
+    riskScore = Math.max(0, Math.min(100, riskScore));
 }
 
-function warningBannerPopup(rscore){
-    if (rscore >= 55){
-        console.log("WARNING!");
-        console.log("Risk Score = ", rscore)
-        //TODO
-    }
-    else{
-        return;
-    }
+function warningBannerPopup(score) {
+    if (score < 55) return;
+    if (document.getElementById("ers-warning-banner")) return; // don't stack
+
+    const banner = document.createElement("div");
+    banner.id = "ers-warning-banner";
+    banner.style.cssText = [
+        "position:fixed", "top:0", "left:0", "right:0", "z-index:2147483647",
+        "background:#b91c1c", "color:#ffffff",
+        "font:600 15px/1.4 system-ui, sans-serif",
+        "padding:12px 48px 12px 16px", "text-align:center",
+        "box-shadow:0 2px 8px rgba(0,0,0,.35)"
+    ].join(";");
+
+    const text = document.createElement("span");
+    text.textContent =
+        `Risk Score: ${score}/100 — CAUTION, do not enter passwords or card details on this site.`;
+    banner.appendChild(text);
+
+    const close = document.createElement("button");
+    close.textContent = "✕";
+    close.setAttribute("aria-label", "Dismiss warning");
+    close.style.cssText =
+        "position:absolute;right:12px;top:8px;background:none;border:none;" +
+        "color:#fff;font-size:18px;cursor:pointer";
+    close.addEventListener("click", () => banner.remove());
+    banner.appendChild(close);
+
+    document.documentElement.appendChild(banner);
 }
 
 function main() {
-    calculateRiskScore();
-    displayRiskScore(riskScore);
+    const inputs = pageHasSensitiveInputs();
+    checkBrandImpersonation(inputs);
+    checkTld();
+    checkUrlShape();
+    checkSensitiveInputs(inputs);
+    checkPhrases();
+
+    clampScore();
+    console.log("[Ecommerce Risk Score]", riskScore, findings);
     warningBannerPopup(riskScore);
+
 }
 
 main();
+
+chrome.runtime.onMessage.addListener((messafe, sender, sendResponse) => {
+    if (message.type === "GET_RISK_REPORT") {
+        sendResponse({ score: riskScore, findings, hostname});
+    }
+});
