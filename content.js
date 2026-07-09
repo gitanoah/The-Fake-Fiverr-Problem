@@ -1,9 +1,12 @@
+console.log("CONTENT SCRIPT LOADED");
+
 let riskScore = 0;
 let findings = [];
 
 const hostname = window.location.hostname.toLowerCase();
 
 const pageText = document.body.innerText.toLowerCase();
+
 // find way to check for capitalization incase phishing site uses mixed caps to mask domain name (e.g. fIvErR.com)
 
 const suspiciousDomains = [
