@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Risk Score</title>
+<style>
+    /* MV3 allows <style> blocks, but NOT inline <script> — that's why
+       the logic lives in popup.js and is loaded at the bottom. */
+
+    :root {
+        --bg: #10151d;
+        --panel: #1a2230;
+        --line: #2b3648;
+        --text: #e8edf5;
+        --muted: #8b98ac;
+        --safe: #34d399;
+        --warn: #fbbf24;
+        --danger: #f87171;
+    }
+
+    body {
+        width: 340px;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 14px/1.45 system-ui, -apple-system, sans-serif;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 14px 16px 10px;
+        border-bottom: 1px solid var(--line);
+    }
+    header h1 { font-size: 13px; font-weight: 600; letter-spacing: .04em;
+                text-transform: uppercase; color: var(--muted); margin: 0; }
+    #host { font: 12px ui-monospace, Menlo, Consolas, monospace;
+            color: var(--text); max-width: 170px; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap; }
+
+    .score-wrap { padding: 20px 16px 8px; text-align: center; }
+    #score { font: 700 52px/1 ui-monospace, Menlo, Consolas, monospace; }
+    #score small { font-size: 18px; color: var(--muted); font-weight: 500; }
+    #verdict { margin-top: 4px; font-size: 13px; font-weight: 600; }
+
+    /* The meter: a track with a needle positioned by JS via `left: N%` */
+    .meter { position: relative; height: 8px; margin: 16px 16px 4px;
+             border-radius: 4px;
+             background: linear-gradient(90deg, var(--safe), var(--warn) 55%, var(--danger)); }
+    #needle { position: absolute; top: -4px; width: 2px; height: 16px;
+              background: var(--text); border-radius: 1px;
+              transition: left .5s ease; }
+
+    .labels { display: flex; justify-content: space-between;
+              margin: 0 16px 12px; font-size: 11px; color: var(--muted); }
+
+    #findings { list-style: none; margin: 0; padding: 8px 16px 16px; }
+    #findings li { display: flex; gap: 10px; padding: 8px 10px; margin-top: 6px;
+                   background: var(--panel); border: 1px solid var(--line);
+                   border-radius: 6px; font-size: 12.5px; }
+    #findings .pts { font-family: ui-monospace, Menlo, Consolas, monospace;
+                     color: var(--danger); flex-shrink: 0; min-width: 32px; }
+    #findings .pts.credit { color: var(--safe); }
+
+    #empty { padding: 8px 16px 18px; color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+    <header>
+        <h1>Risk Score</h1>
+        <span id="host">—</span>
+    </header>
+
+    <div class="score-wrap">
+        <div id="score">–<small>/100</small></div>
+        <div id="verdict"></div>
+    </div>
+
+    <div class="meter"><div id="needle" style="left:0%"></div></div>
+    <div class="labels"><span>low</span><span>55 · warning</span><span>high</span></div>
+
+    <ul id="findings"></ul>
+    <p id="empty" hidden>No risk signals detected on this page.</p>
+
+    <script src="popup.js"></script>
+</body>
+</html>
