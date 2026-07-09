@@ -198,7 +198,7 @@ function warningBannerPopup(score) {
 }
 
 function main() {
-    const inputs = pageHasSensitiveInputs();
+    const inputs = pageWantsSensitiveData();
     checkBrandImpersonation(inputs);
     checkTld();
     checkUrlShape();
