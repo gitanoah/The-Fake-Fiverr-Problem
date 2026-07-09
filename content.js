@@ -1,12 +1,10 @@
-console.log("CONTENT SCRIPT LOADED");
-
 let riskScore = 0;
 let findings = [];
 
 const hostname = window.location.hostname.toLowerCase();
 
 const pageText = document.body.innerText.toLowerCase();
-
+const pageTitle = (document.title || "").toLowerCase();
 // find way to check for capitalization incase phishing site uses mixed caps to mask domain name (e.g. fIvErR.com)
 
 const suspiciousDomains = [
@@ -50,7 +48,7 @@ function addFinding(points, message){
 
 //CHECKS
 function isOnDomain(hostname, domain){
-    return host === domain || host.endsWith("." + domain);
+    return hostname === domain || hostname.endsWith("." + domain);
 }
 
 function pageWantsSensitiveData(){
@@ -149,7 +147,7 @@ function checkSensitiveInputs(inputs) {
 
 function checkPhrases() {
     let hits = 0;
-    for (const phrase of suspiciousPhrases) {
+    for (const phrase of maliciousPhrases) {
         if (pageText.includes(phrase)) {
             hits++;
             if (hits <= 2) { // cap so a long page can't rack up 12 findings
@@ -199,11 +197,22 @@ function warningBannerPopup(score) {
 
 function main() {
     const inputs = pageWantsSensitiveData();
+    console.log("Check 1 Done");
+
     checkBrandImpersonation(inputs);
+    console.log("Check 2 Done");
+
     checkTld();
+    console.log("Check 3 Done");
+
     checkUrlShape();
+    console.log("Check 4 Done");
+
     checkSensitiveInputs(inputs);
+    console.log("Check 5 Done");
+
     checkPhrases();
+    console.log("Check 6 Done");
 
     clampScore();
     console.log("[Ecommerce Risk Score]", riskScore, findings);
@@ -213,7 +222,7 @@ function main() {
 
 main();
 
-chrome.runtime.onMessage.addListener((messafe, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "GET_RISK_REPORT") {
         sendResponse({ score: riskScore, findings, hostname});
     }
